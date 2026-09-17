@@ -269,6 +269,22 @@ body {
   overflow-y: hidden;
   padding-bottom: 16px;
   margin-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --tile-size: 56px;
+    --tile-h: 64px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --tile-size: 50px;
+    --tile-h: 58px;
+  }
 }
 
 .periodic-table-grid {

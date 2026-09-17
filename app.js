@@ -18,6 +18,8 @@ const CATEGORIES = {
   ACTINIDE: { en: "Actinide", hi: "ऐक्टिनाइड", color: "#BE123C", bg: "rgba(190, 18, 60, 0.15)" }
 };
 
+window.CATEGORIES = CATEGORIES;
+
 // All 118 verified elements with standard properties
 const ELEMENTS = [
   { n: 1, s: "H", en: "Hydrogen", hi: "हाइड्रोजन", m: "1.008", g: 1, p: 1, b: "s", c: "REACTIVE_NONMETAL", ec: "1s¹", ph: "Gas", mp: "13.99 K (-259.16 °C)", bp: "20.271 K (-252.879 °C)", d: "0.08988 g/L", eneg: "2.20", ox: "+1, -1", yr: "1766", disc: "Henry Cavendish", u_en: "Rocket fuel, ammonia fertilizer, clean hydrogen fuel cells.", u_hi: "रॉकेट ईंधन, अमोनिया उर्वरक, और स्वच्छ हाइड्रोजन ईंधन सेल।", sum_en: "Most abundant chemical element in the universe; fuel of stars.", sum_hi: "ब्रह्मांड में सबसे प्रचुर तत्व; सूर्य और तारों का प्राथमिक ईंधन।", r: 1, col: 1 },
@@ -174,11 +176,28 @@ ELEMENT_NAMES.forEach((item, index) => {
     u_en: item[17],
     u_hi: item[18],
     sum_en: item[19],
-    sum_hi: item[20],
-    r: item[21],
-    col: item[22]
+    sum_hi: item[18],
+    r: item[20] !== undefined ? item[20] : item[5],
+    col: item[21] !== undefined ? item[21] : item[4]
   });
 });
+
+// Expose globally
+window.ELEMENTS = ELEMENTS;
+
+// Accurate CSS Grid Position for every element (1 to 118)
+function getGridPosition(el) {
+  // Lanthanides (57-71): Row 10 in CSS Grid, Columns 5..19 (Group 3-17 offset)
+  if (el.n >= 57 && el.n <= 71) {
+    return { row: 10, col: (el.n - 57) + 5 };
+  }
+  // Actinides (89-103): Row 11 in CSS Grid, Columns 5..19 (Group 3-17 offset)
+  if (el.n >= 89 && el.n <= 103) {
+    return { row: 11, col: (el.n - 89) + 5 };
+  }
+  // Standard elements: Period 1..7 placed in CSS Rows 2..8, Group 1..18 placed in CSS Columns 2..19
+  return { row: el.p + 1, col: el.g + 1 };
+}
 
 // App State
 let currentLang = "en"; // "en" or "hi"
@@ -373,11 +392,9 @@ function renderPeriodicTable() {
     tile.className = `element-tile ${el.c}`;
     tile.id = `tile-${el.n}`;
 
-    let gridRow = el.r + 1;
-    let gridCol = el.col + 1;
-
-    tile.style.gridColumn = gridCol;
-    tile.style.gridRow = gridRow;
+    const pos = getGridPosition(el);
+    tile.style.gridColumn = pos.col;
+    tile.style.gridRow = pos.row;
 
     const cat = CATEGORIES[el.c] || { color: "#3B82F6", bg: "rgba(59,130,246,0.15)" };
     tile.style.borderColor = cat.color;
@@ -507,6 +524,8 @@ function openElementModal(el) {
   modal.classList.add("open");
 }
 
+window.openElementModal = openElementModal;
+
 function closeModal() {
   const modal = $("elementModal");
   if (modal) modal.classList.remove("open");
@@ -594,17 +613,6 @@ function renderCategoriesList() {
     catCard.className = "cat-card";
     catCard.style.borderColor = cat.color;
 
-    let elementsPills = "";
-    elementsInCat.forEach(el => {
-      elementsPills += `
-        <div class="cat-elem-pill" onclick="openElementModal(ELEMENTS[${el.n - 1}])">
-          <span class="p-num">#${el.n}</span>
-          <span class="p-sym">${el.s}</span>
-          <span class="p-name">${currentLang === "hi" ? el.hi : el.en}</span>
-        </div>
-      `;
-    });
-
     catCard.innerHTML = `
       <div class="cat-card-header">
         <div class="cat-card-title">
@@ -613,8 +621,21 @@ function renderCategoriesList() {
         </div>
         <span class="cat-count-badge" style="background:${cat.bg}; color:${cat.color};">${elementsInCat.length} ${currentLang === "hi" ? "तत्व" : "elements"}</span>
       </div>
-      <div class="cat-elements-grid">${elementsPills}</div>
+      <div class="cat-elements-grid"></div>
     `;
+
+    const pillsGrid = catCard.querySelector(".cat-elements-grid");
+    elementsInCat.forEach(el => {
+      const pill = document.createElement("div");
+      pill.className = "cat-elem-pill";
+      pill.innerHTML = `
+        <span class="p-num">#${el.n}</span>
+        <span class="p-sym">${el.s}</span>
+        <span class="p-name">${currentLang === "hi" ? el.hi : el.en}</span>
+      `;
+      pill.onclick = () => openElementModal(el);
+      pillsGrid.appendChild(pill);
+    });
 
     container.appendChild(catCard);
   });
