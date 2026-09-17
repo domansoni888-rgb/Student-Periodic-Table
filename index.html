@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STUDENT Periodic Table • 118 Chemical Elements</title>
+  <meta name="description" content="STUDENT Periodic Table - An interactive, modern, and verified Periodic Table of 118 Elements with Hindi & English support, 3 quiz modes, search, and detailed chemical data. Made by Doman Soni.">
+  <meta name="author" content="Doman Soni">
+  <meta name="version" content="1.0.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚛️</text></svg>">
+</head>
+<body>
+
+  <!-- Top App Header -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-icon">⚛</div>
+      <div class="brand-text">
+        <h1 id="appTitle">STUDENT Periodic Table</h1>
+        <p id="appSubtitle">Explore All 118 Elements • IUPAC Verified</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="langToggleBtn" class="btn-action" title="Switch Language">हिन्दी</button>
+      <button id="themeToggleBtn" class="btn-icon" title="Toggle Dark/Light Mode">☀️</button>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-tabs">
+    <button id="tabTableBtn" class="tab-btn active">Periodic Table</button>
+    <button id="tabSearchBtn" class="tab-btn">Search</button>
+    <button id="tabCategoriesBtn" class="tab-btn">Categories</button>
+    <button id="tabQuizBtn" class="tab-btn">Quiz</button>
+  </nav>
+
+  <!-- Main App Content -->
+  <main class="main-container">
+
+    <!-- Feature Row: Element of the Day & Random Element -->
+    <div class="feature-row">
+      <div id="eotdCard" class="feature-card eotd-card" title="Click to view full element properties">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">🌟 ELEMENT OF THE DAY</span>
+          <span id="eotdBadge" class="card-tag">#79</span>
+        </div>
+        <div class="eotd-content">
+          <div id="eotdSymbol" class="eotd-symbol">Au</div>
+          <div>
+            <h3 id="eotdName" style="font-size:1.15rem; font-weight:800;">Gold</h3>
+            <p id="eotdCat" style="font-size:0.8rem; font-weight:600;">Transition Metal</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="btnRandomElement" class="feature-card random-card" title="Open a random element to learn">
+        <span style="font-size:1.5rem;">🎲</span>
+        <strong style="font-size:0.9rem;">Random Element</strong>
+        <span style="font-size:0.75rem; color:var(--text-muted);">Explore something new</span>
+      </div>
+    </div>
+
+    <!-- VIEW 1: Interactive Periodic Table Grid -->
+    <section id="viewTable">
+      <!-- Category Filter Chips -->
+      <div id="categoryChipsContainer" class="filter-bar"></div>
+
+      <!-- 18 x 10 Periodic Table Grid Canvas -->
+      <div class="periodic-table-wrapper">
+        <div id="periodicTableGrid" class="periodic-table-grid"></div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: Search Elements -->
+    <section id="viewSearch" style="display:none;">
+      <div class="search-input-wrap">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search by Name, Symbol, or Atomic Number (e.g. Gold / Au / 79)">
+      </div>
+      <div style="margin-bottom:12px; font-size:0.85rem; font-weight:700; color:var(--text-muted);" id="searchResultsCount">118 elements found</div>
+      <div id="searchResultsList" class="search-results-list"></div>
+    </section>
+
+    <!-- VIEW 3: Element Categories -->
+    <section id="viewCategories" style="display:none;">
+      <div id="categoriesContainer" class="categories-grid"></div>
+    </section>
+
+    <!-- VIEW 4: Educational Chemistry Quiz -->
+    <section id="viewQuiz" style="display:none;">
+      <div class="quiz-container">
+        <div class="quiz-mode-nav">
+          <button id="btnQuizNum" class="quiz-mode-btn active">Atomic Number</button>
+          <button id="btnQuizSym" class="quiz-mode-btn">Chemical Symbol</button>
+          <button id="btnQuizName" class="quiz-mode-btn">Element Name</button>
+        </div>
+
+        <div class="quiz-status-bar">
+          <span id="quizCounter">Question 1 / 10</span>
+          <span id="quizScoreText">Score: 0 / 10</span>
+          <span id="quizStreakText">Streak: 0 🔥</span>
+        </div>
+
+        <div class="progress-track">
+          <div id="quizProgressBar" class="progress-fill" style="width: 10%;"></div>
+        </div>
+
+        <!-- Active Question Card -->
+        <div id="quizActiveCard" class="quiz-card">
+          <h3 id="quizQuestionText" class="quiz-q-text">What is the Atomic Number of Gold (Au)?</h3>
+          <div id="quizOptions" class="quiz-options"></div>
+
+          <div id="quizFeedback" class="quiz-feedback">
+            <h4 id="quizFeedbackText" style="font-size:1rem; margin-bottom:4px;">🎉 Correct!</h4>
+            <p id="quizExplanation" style="font-size:0.85rem; color:var(--text-muted);"></p>
+          </div>
+
+          <div style="margin-top:16px;">
+            <button id="quizNextBtn" class="btn-action" style="display:none; padding:10px 24px; background:var(--primary); color:white; border:none; border-radius:8px;">Next Question ➔</button>
+          </div>
+        </div>
+
+        <!-- Finished Screen -->
+        <div id="quizFinishedCard" class="quiz-card" style="display:none;">
+          <span style="font-size:3rem;">🏆</span>
+          <h2 style="margin:12px 0 8px;">Quiz Completed!</h2>
+          <p id="quizFinalScore" style="font-size:1.1rem; font-weight:700; color:var(--primary); margin-bottom:20px;">Your Final Score: 10 / 10</p>
+          <button id="quizRestartBtn" class="btn-action" style="padding:10px 24px; background:var(--primary); color:white; border:none; border-radius:8px;">Play Again</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Element Detail Modal Dialog -->
+  <div id="elementModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span id="modalCategoryBadge" class="card-tag">Transition Metal</span>
+        <button id="modalCloseBtn" class="btn-icon" style="font-size:1.1rem; width:32px; height:32px;">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Hero Box -->
+        <div id="modalHero" class="modal-hero">
+          <div class="modal-hero-top">
+            <span id="modalAtomicNum">#79</span>
+            <span id="modalMass">196.97 u</span>
+          </div>
+          <div id="modalSymbol" class="modal-hero-symbol">Au</div>
+          <div id="modalName" class="modal-hero-name">Gold (सोना)</div>
+          <div id="modalBadges" class="badge-row"></div>
+        </div>
+
+        <!-- Properties Table -->
+        <div id="modalProperties"></div>
+
+        <!-- Practical Uses Box -->
+        <div class="section-box">
+          <h4 id="modalUsesTitle">Practical Uses</h4>
+          <p id="modalUsesText"></p>
+        </div>
+
+        <!-- Scientific Summary Box -->
+        <div class="section-box">
+          <h4 id="modalSummaryTitle">Scientific Overview</h4>
+          <p id="modalSummaryText"></p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="modalPrevBtn" class="btn-action">◀ Previous</button>
+        <span id="modalCounter" style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">79 / 118</span>
+        <button id="modalNextBtn" class="btn-action">Next ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Footer with Author Credit & Version -->
+  <footer class="app-footer">
+    <div>
+      <span class="footer-credit" id="footerCredit">Made by Doman Soni</span>
+      <span style="margin: 0 8px; color:var(--border-color);">•</span>
+      <span style="font-size:0.75rem; color:var(--text-muted);" id="footerVersion">v1.0.0</span>
+    </div>
+    <div style="font-size:0.75rem; color:var(--text-muted);">
+      IUPAC & NIST Scientific Standards • 118 Elements
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
