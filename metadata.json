@@ -1,0 +1,6 @@
+{
+  "name": "STUDENT Periodic Table",
+  "description": "Interactive, accurate, and colorful Periodic Table of 118 Elements with quizzes, Hindi and English language support, search, and detailed chemical properties for students.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
