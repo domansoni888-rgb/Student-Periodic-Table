@@ -8,7 +8,12 @@
   <meta name="author" content="Doman Soni">
   <meta name="version" content="1.0.0">
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚛️</text></svg>">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
 </head>
 <body>
 
@@ -22,6 +27,7 @@
       </div>
     </div>
     <div class="header-actions">
+      <button id="installAppBtn" class="btn-action" style="display:none; background:#10b981; color:white; border-color:#10b981; font-weight:700;" title="Install on Mobile">📲 Install App</button>
       <button id="langToggleBtn" class="btn-action" title="Switch Language">हिन्दी</button>
       <button id="themeToggleBtn" class="btn-icon" title="Toggle Dark/Light Mode">☀️</button>
     </div>

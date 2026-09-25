@@ -867,4 +867,30 @@ function setupEventListeners() {
   $("elementModal").onclick = (e) => {
     if (e.target.id === "elementModal") closeModal();
   };
+
+  // PWA Install prompt listener
+  let deferredPrompt;
+  const installBtn = $("installAppBtn");
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (installBtn) {
+      installBtn.style.display = "inline-flex";
+      installBtn.onclick = async () => {
+        installBtn.style.display = "none";
+        deferredPrompt.prompt();
+        try {
+          await deferredPrompt.userChoice;
+        } catch (_) {}
+        deferredPrompt = null;
+      };
+    }
+  });
+
+  // Register service worker for offline & installability
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    });
+  }
 }
